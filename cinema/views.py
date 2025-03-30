@@ -11,9 +11,12 @@ from cinema.serializers import (
     MovieSerializer,
     MovieDetailSerializer,
     MovieSessionDetailSerializer,
+    MovieSessionListSerializer,
     MovieListSerializer,
     OrderSerializer,
     OrderListSerializer,
+    CinemaHallSerializer,
+    MovieSessionSerializer,
 )
 
 
@@ -28,7 +31,10 @@ class MovieViewSet(viewsets.ModelViewSet):
 
     @staticmethod
     def params_to_ints(query_string: str) -> list[int]:
-        return [int(param) for param in query_string.split(",")]
+        try:
+            return [int(param) for param in query_string.split(",")]
+        except ValueError:
+            return []
 
     def get_queryset(self):
         queryset = self.queryset
@@ -41,11 +47,12 @@ class MovieViewSet(viewsets.ModelViewSet):
 
         if actors:
             actors = self.params_to_ints(actors)
-            return queryset.filter(actors__id__in=actors)
+            queryset = queryset.filter(actors__id__in=actors)
 
         if genres:
             genres = self.params_to_ints(genres)
-            return queryset.filter(genres__id__in=genres)
+            queryset = queryset.filter(genres__id__in=genres)
+
         return queryset.distinct()
 
     def get_serializer_class(self):
