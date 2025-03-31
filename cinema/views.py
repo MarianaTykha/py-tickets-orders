@@ -69,7 +69,10 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset.annotate(
-            tickets_available=F("cinema_hall__rows") * F("cinema_hall__seats_in_row") - Count("tickets")
+            tickets_available=(
+                    F("cinema_hall__rows") * F("cinema_hall__seats_in_row")
+                    - Count("tickets")
+            )
         )
         movie = self.request.query_params.get("movie")
         date = self.request.query_params.get("date")

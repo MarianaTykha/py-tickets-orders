@@ -137,5 +137,6 @@ class MovieSessionDetailSerializer(MovieSessionSerializer):
                     }
                 )
 
-class OrderListSerializer(OrderSerializer):
+
+tSerializer(OrderSerializer):
     tickets = TicketListSerializer(read_only=True, many=True)
